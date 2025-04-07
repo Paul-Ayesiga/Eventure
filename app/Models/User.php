@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Scout\Searchable;
 
-class User extends Authenticatable 
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, Searchable;
@@ -79,7 +79,7 @@ class User extends Authenticatable
     // For organisers: events they have created
     public function events()
     {
-        return $this->hasMany(Events::class, 'organiser_id');
+        return $this->hasMany(Event::class, 'organiser_id');
     }
 
     public function userDetail()

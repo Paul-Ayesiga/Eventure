@@ -134,7 +134,7 @@
         </div>
 
         <!-- Charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" x-data>
             <!-- Bookings Chart -->
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -153,8 +153,59 @@
                             Over Time
                     @endswitch
                 </h3>
-                <div class="h-64">
-                    <canvas id="bookingsChart" wire:ignore></canvas>
+                <div class="h-64" wire:ignore x-init="
+                    let bookingsChart;
+
+                    function initBookingsChart() {
+                        if (bookingsChart) bookingsChart.destroy();
+
+                        const ctx = document.getElementById('bookingsChart');
+                        if (ctx) {
+                            bookingsChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: $wire.chartData.labels,
+                                    datasets: [{
+                                        label: 'Bookings',
+                                        data: $wire.chartData.bookings,
+                                        borderColor: 'rgb(59, 130, 246)',
+                                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                        tension: 0.1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        },
+                                        tooltip: {
+                                            mode: 'index',
+                                            intersect: false
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                stepSize: 1
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    initBookingsChart();
+
+                    $wire.$watch('chartData', () => {
+                        initBookingsChart();
+                    });
+                ">
+                    <canvas id="bookingsChart"></canvas>
                 </div>
             </div>
 
@@ -176,143 +227,78 @@
                             Over Time
                     @endswitch
                 </h3>
-                <div class="h-64">
-                    <canvas id="revenueChart" wire:ignore></canvas>
+                <div class="h-64" wire:ignore x-init="
+                    let revenueChart;
+
+                    function initRevenueChart() {
+                        if (revenueChart) revenueChart.destroy();
+
+                        const ctx = document.getElementById('revenueChart');
+                        if (ctx) {
+                            revenueChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: $wire.chartData.labels,
+                                    datasets: [{
+                                        label: 'Revenue',
+                                        data: $wire.chartData.revenue,
+                                        borderColor: 'rgb(34, 197, 94)',
+                                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                        tension: 0.1,
+                                        fill: true
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: false
+                                        },
+                                        tooltip: {
+                                            mode: 'index',
+                                            intersect: false,
+                                            callbacks: {
+                                                label: function(context) {
+                                                    return 'Revenue: ' + context.parsed.y.toLocaleString('en-US', {
+                                                        style: 'currency',
+                                                        currency: '{{ $event->currency }}'
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                callback: function(value) {
+                                                    return value.toLocaleString('en-US', {
+                                                        style: 'currency',
+                                                        currency: '{{ $event->currency }}'
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    initRevenueChart();
+
+                    $wire.$watch('chartData', () => {
+                        initRevenueChart();
+                    });
+                ">
+                    <canvas id="revenueChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-
 </div>
 @push('scripts')
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    let bookingsChart, revenueChart;
-
-    document.addEventListener('livewire:initialized', () => {
-        initializeCharts();
-    });
-
-    document.addEventListener('livewire:navigated', () => {
-        initializeCharts();
-    });
-
-    document.addEventListener('livewire:navigating', () => {
-        if (bookingsChart) bookingsChart.destroy();
-        if (revenueChart) revenueChart.destroy();
-    });
-
-    function initializeCharts() {
-        // Destroy existing charts if they exist
-        if (bookingsChart) bookingsChart.destroy();
-        if (revenueChart) revenueChart.destroy();
-
-        // Initialize Bookings Chart
-        bookingsChart = new Chart(
-            document.getElementById('bookingsChart'),
-            {
-                type: 'line',
-                data: {
-                    labels: @json($chartData['labels']),
-                    datasets: [{
-                        label: 'Bookings',
-                        data: @json($chartData['bookings']),
-                        borderColor: 'rgb(59, 130, 246)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        tension: 0.1,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
-            }
-        );
-
-        // Initialize Revenue Chart
-        revenueChart = new Chart(
-            document.getElementById('revenueChart'),
-            {
-                type: 'line',
-                data: {
-                    labels: @json($chartData['labels']),
-                    datasets: [{
-                        label: 'Revenue',
-                        data: @json($chartData['revenue']),
-                        borderColor: 'rgb(34, 197, 94)',
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                        tension: 0.1,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return 'Revenue: ' + context.parsed.y.toLocaleString('en-US', {
-                                        style: 'currency',
-                                        currency: '{{ $event->currency }}'
-                                    });
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toLocaleString('en-US', {
-                                        style: 'currency',
-                                        currency: '{{ $event->currency }}'
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        );
-    }
-
-    // Update charts when data changes
-    Livewire.on('updateCharts', () => {
-        if (bookingsChart && revenueChart) {
-            bookingsChart.data.labels = @json($chartData['labels']);
-            bookingsChart.data.datasets[0].data = @json($chartData['bookings']);
-            bookingsChart.update();
-
-            revenueChart.data.labels = @json($chartData['labels']);
-            revenueChart.data.datasets[0].data = @json($chartData['revenue']);
-            revenueChart.update();
-        }
-    });
-</script>
 @endpush

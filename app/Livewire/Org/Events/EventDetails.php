@@ -3,7 +3,7 @@
 namespace App\Livewire\Org\Events;
 
 use Livewire\Component;
-use App\Models\Events;
+use App\Models\Event;
 use Carbon\Carbon;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +13,7 @@ class EventDetails extends Component
 {
     use WithFileUploads;
 
-    public $eventId;
+    public int $eventId;
     public $event;
     public $isEditing = false;
 
@@ -106,7 +106,7 @@ class EventDetails extends Component
 
     public function loadEvent()
     {
-        $this->event = Events::findOrFail($this->eventId);
+        $this->event = Event::findOrFail($this->eventId);
         if (!$this->isEditing) {
             $this->fillFormFields();
         }

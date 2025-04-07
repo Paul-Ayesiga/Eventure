@@ -24,7 +24,7 @@ class Booking extends Model
 
     public function event(): BelongsTo
     {
-        return $this->belongsTo(Events::class, 'event_id');
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
     public function user(): BelongsTo

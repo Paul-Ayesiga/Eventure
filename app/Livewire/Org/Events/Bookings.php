@@ -2,8 +2,9 @@
 
 namespace App\Livewire\Org\Events;
 
+use App\Events\UpdateChart;
 use App\Models\Booking;
-use App\Models\Events;
+use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\Attendee;
 use Livewire\Component;
@@ -34,7 +35,7 @@ class Bookings extends Component
     public function mount($id)
     {
         $this->eventId = $id;
-        $this->event = Events::findOrFail($id);
+        $this->event = Event::findOrFail($id);
         $this->loadCustomers();
 
         // Check if user is authorized to manage this event
@@ -209,6 +210,7 @@ class Bookings extends Component
         $this->reset(['selectedCustomerId', 'selectedTicketId', 'ticketQuantity', 'isSimulating']);
 
         $this->dispatch('toast', "Successfully created booking for {$customer->name}.", 'success', 'top-right');
+        $this->dispatch('booking-changed');
     }
 
     public function deleteBooking($bookingId)
@@ -229,6 +231,7 @@ class Bookings extends Component
         // Delete the booking (this will cascade delete attendees and booking items)
         $booking->delete();
 
+        $this->dispatch('booking-changed');
         $this->dispatch('toast', 'Booking deleted successfully.', 'success', 'top-right');
     }
 

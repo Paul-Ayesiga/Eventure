@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Org\Events;
 
-use App\Models\Events;
+use App\Models\Event;
 use App\Models\Booking;
 use App\Models\Ticket;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class Insights extends Component
 {
@@ -19,10 +20,11 @@ class Insights extends Component
     public $chartData = [];
     public $stats = [];
 
+
     public function mount($id)
     {
         $this->eventId = $id;
-        $this->event = Events::with(['bookings', 'tickets'])->findOrFail($id);
+        $this->event = Event::with(['bookings', 'tickets'])->findOrFail($id);
         $this->loadStats();
         $this->loadChartData();
 
@@ -30,6 +32,14 @@ class Insights extends Component
         // if ($this->event->organiser->organiser_id !== Auth::id()) {
         //     abort(403, 'Unauthorized action.');
         // }
+    }
+
+    #[On('booking-changed')]
+    public function refreshData()
+    {
+        $this->event = Event::with(['bookings', 'tickets'])->findOrFail($this->eventId);
+        $this->loadStats();
+        $this->loadChartData();
     }
 
     public function loadStats()
@@ -51,8 +61,8 @@ class Insights extends Component
     {
         $bookings = $this->getFilteredBookings();
 
-        // Group bookings by date
-        $groupedBookings = $bookings->groupBy(function ($booking) {
+        // Group bookings by date and ensure dates are in order
+        $groupedBookings = $bookings->sortBy('created_at')->groupBy(function ($booking) {
             return $booking->created_at->format('Y-m-d');
         });
 

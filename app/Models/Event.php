@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Scout\Searchable;
 
-class Events extends Model
+class Event extends Model
 {
     use Searchable;
 
@@ -77,24 +77,4 @@ class Events extends Model
         });
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($event) {
-            // Create default settings for the event
-            $event->settings()->create([
-                'event_id' => $event->id,
-                'enable_waitlist' => false,
-                'is_private' => false,
-                'enable_refunds' => false,
-                'enable_discounts' => false,
-                'enable_live_streaming' => false,
-                'enable_analytics' => false,
-                'track_attendance' => false,
-                'track_engagement' => false,
-                'track_revenue' => false,
-            ]);
-        });
-    }
 }

@@ -63,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/events/{id}/tickets', \App\Livewire\Org\Events\Tickets::class)->name('event-tickets');
     Route::get('/events/{id}/bookings', \App\Livewire\Org\Events\Bookings::class)->name('event-bookings');
     Route::get('/events/{id}/insights', \App\Livewire\Org\Events\Insights::class)->name('event-insights');
-    Route::get('/events/{id}/settings', \App\Livewire\Org\Events\EventSettings::class)->name('event-settings');
+    Route::get('/events/{id}/waiting-list', \App\Livewire\Org\Events\WaitingList::class)->name('event-waiting-list');
 });
 
 

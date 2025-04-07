@@ -18,16 +18,19 @@
                 <flux:navbar.item icon="layout-dashboard" href="{{ route('event-details', ['id' => $eventId]) }}" :current="request()->routeIs('event-details')" wire:navigate>
                     {{ __('Overview') }}
                 </flux:navbar.item>
+                <flux:navbar.item icon="chart-bar" href="{{ route('event-insights', ['id' => $eventId]) }}" :current="request()->routeIs('event-insights')" wire:navigate>
+                    {{ __('Insights') }}
+                </flux:navbar.item>
                 <flux:navbar.item icon="ticket" href="{{ route('event-tickets', ['id' => $eventId]) }}" :current="request()->routeIs('event-tickets')" wire:navigate>
                     {{ __('Tickets') }}
                 </flux:navbar.item>
                 <flux:navbar.item icon="calendar" href="{{ route('event-bookings', ['id' => $eventId]) }}" :current="request()->routeIs('event-bookings')" wire:navigate>
                     {{ __('Bookings') }}
                 </flux:navbar.item>
-                <flux:navbar.item icon="chart-bar" href="{{ route('event-insights', ['id' => $eventId]) }}" :current="request()->routeIs('event-insights')" wire:navigate>
-                    {{ __('Insights') }}
+                <flux:navbar.item icon="user-group" href="{{ route('event-waiting-list', ['id' => $eventId]) }}" :current="request()->routeIs('event-waiting-list')" wire:navigate>
+                    {{ __('Waiting List') }}
                 </flux:navbar.item>
-                <flux:navbar.item icon="cog-6-tooth" href="{{ route('event-settings', ['id' => $eventId]) }}" :current="request()->routeIs('event-settings')" wire:navigate>
+                <flux:navbar.item icon="cog-6-tooth" href="#"  wire:navigate>
                     {{ __('Settings') }}
                 </flux:navbar.item>
             </flux:navbar>
@@ -37,7 +40,7 @@
             <flux:navbar class="mr-1.5 space-x-0.5 py-0!">
                 <flux:tooltip :content="__('Back to Events')" position="bottom">
                     <flux:navbar.item
-                        class="h-10 max-lg:hidden [&>div>svg]:size-5 bg-gradient-to-r from-orange-200 to-yellow-500 text-white rounded-full"
+                        class="h-10 max-lg:hidden [&>div>svg]:size-5 bg-gradient-to-r text-white rounded-full"
                         icon="arrow-left"
                         href="{{ route('events') }}"
                         :label="__('Back to Events')"
@@ -128,6 +131,9 @@
                     </flux:navlist.item>
                     <flux:navlist.item icon="calendar" href="{{ route('event-bookings', ['id' => $eventId]) }}" :current="request()->routeIs('event-bookings')" wire:navigate>
                         {{ __('Bookings') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="user-group" href="{{ route('event-waiting-list', ['id' => $eventId]) }}" :current="request()->routeIs('event-waiting-list')" wire:navigate>
+                        {{ __('Waiting List') }}
                     </flux:navlist.item>
                     <flux:navlist.item icon="chart-bar" href="{{ route('event-insights', ['id' => $eventId]) }}" :current="request()->routeIs('event-insights')" wire:navigate>
                         {{ __('Insights') }}

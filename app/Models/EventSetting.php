@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Events;
+use App\Models\Event;
 
 class EventSetting extends Model
 {
@@ -47,6 +47,6 @@ class EventSetting extends Model
 
     public function event()
     {
-        return $this->belongsTo(Events::class);
+        return $this->belongsTo(Event::class);
     }
 }

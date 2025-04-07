@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Volt\Component;
-use App\Models\Events;
+use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -43,7 +43,7 @@ new class extends Component {
 
     public function fetchEvents()
     {
-        $query = Events::where('organiser_id', Auth::id())
+        $query = Event::where('organiser_id', Auth::id())
                     ->where('name', 'ilike', '%' . $this->search . '%');
 
         if (trim($this->eventTypeSelected) !== '') {
@@ -67,7 +67,7 @@ new class extends Component {
         $start_datetime = Carbon::parse("{$this->start_date} {$this->start_time}");
         $end_datetime   = Carbon::parse("{$this->start_date} {$this->end_time}");
 
-        $event = Events::create([
+        $event = Event::create([
             'organiser_id' => Auth::id(),
             'event_type' => $this->eventType,
             'name' => $this->name,
@@ -121,7 +121,7 @@ new class extends Component {
     public function delete($id)
     {
         if ($id) {
-            Events::findOrFail($id)->delete();
+            Event::findOrFail($id)->delete();
             Flux::modal('delete-event')->close();
             $this->dispatch('toast', 'Event draft deleted successfully', 'success', 'top-right');
             $this->eventToDelete = null;

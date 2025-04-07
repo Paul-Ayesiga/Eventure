@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Org\Events;
 
-use App\Models\Events;
+use App\Models\Event;
 use App\Models\Ticket;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -44,7 +44,7 @@ class Tickets extends Component
     public function mount($id)
     {
         $this->eventId = $id;
-        $this->event = Events::findOrFail($id);
+        $this->event = Event::findOrFail($id);
 
         // Check if user is authorized to manage this event
         // if ($this->event->organiser->organiser_id !== Auth::id()) {
